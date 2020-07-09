@@ -1,19 +1,56 @@
-FROM alpine:3.10.3 AS s6-alpine
-LABEL maintainer="Aleksandar Puharic xzero@elite7haers.net"
+FROM alpine:latest as base
+ARG TARGETARCH
 
-ARG S6_OVERLAY_RELEASE=https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-amd64.tar.gz
-ENV S6_OVERLAY_RELEASE=${S6_OVERLAY_RELEASE}
 
-ADD rootfs /
+LABEL maintainer="Saswat Padhi saswat.sourav@gmail.com"
 
-# s6 overlay Download
-ADD ${S6_OVERLAY_RELEASE} /tmp/s6overlay.tar.gz
 
-# Build and some of image configuration
-RUN apk upgrade --update --no-cache \
-    && rm -rf /var/cache/apk/* \
-    && tar xzf /tmp/s6overlay.tar.gz -C / \
-    && rm /tmp/s6overlay.tar.gz
+FROM base AS base-amd64
+ENV S6_OVERLAY_ARCH=amd64
 
-# Init
+FROM base AS base-386
+ENV S6_OVERLAY_ARCH=x86
+
+FROM base AS base-arm64
+ENV S6_OVERLAY_ARCH=aarch64
+
+FROM base AS base-armv7
+ENV S6_OVERLAY_ARCH=armhf
+
+FROM base AS base-armv6
+ENV S6_OVERLAY_ARCH=arm
+
+FROM base AS base-ppc64le
+ENV S6_OVERLAY_ARCH=ppc64le
+
+FROM base-${TARGETARCH}${TARGETVARIANT}
+
+
+ARG S6_OVERLAY_VERSION=v2.0.0.1
+
+
+ARG GPG_PUB_KEY=https://keybase.io/justcontainers/key.asc
+ADD ${GPG_PUB_KEY} /tmp/key.asc
+
+ARG S6_OVERLAY_RELEASE=https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz
+ADD ${S6_OVERLAY_RELEASE} /tmp/s6-overlay.tar.gz
+
+ARG S6_OVERLAY_GPG_SIG=https://github.com/just-containers/s6-overlay/releases/download/${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.gz.sig
+ADD ${S6_OVERLAY_GPG_SIG} /tmp/s6-overlay.tar.gz.sig
+
+
+RUN apk add --no-cache --purge -uU gnupg \
+ && gpg --import /tmp/key.asc \
+ && gpg --batch --verify /tmp/s6-overlay.tar.gz.sig \
+                         /tmp/s6-overlay.tar.gz \
+ && apk upgrade --update --no-cache \
+ && tar xzf /tmp/s6-overlay.tar.gz -C / \
+ && apk del --purge gnupg \
+ && rm -rf /tmp/* \
+           /var/cache/apk/* \
+ && mkdir -p /etc/cont-finish.d \
+             /etc/cont-init.d \
+             /etc/fix-attrs.d \
+             /etc/services.d
+
 ENTRYPOINT [ "/init" ]
