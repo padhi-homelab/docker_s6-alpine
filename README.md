@@ -1,6 +1,6 @@
-# docker_s6-alpine <a href='https://github.com/padhi-homelab/docker_s6-alpine/actions?query=workflow%3A%22Docker+CI+Release%22'><img align='right' src='https://img.shields.io/github/workflow/status/padhi-homelab/docker_s6-alpine/Docker%20CI%20Release?logo=github&logoWidth=24&style=flat-square'></img></a>
+# docker_s6-overlay <a href='https://github.com/padhi-homelab/docker_s6-overlay/actions?query=workflow%3A%22Docker+CI+Release%22'><img align='right' src='https://img.shields.io/github/workflow/status/padhi-homelab/docker_s6-overlay/Docker%20CI%20Release?logo=github&logoWidth=24&style=flat-square'></img></a>
 
-<a href='https://hub.docker.com/r/padhihomelab/s6-alpine'><img src='https://img.shields.io/docker/image-size/padhihomelab/s6-alpine/latest?logo=docker&logoWidth=24&style=for-the-badge'></img></a> <a href='https://microbadger.com/images/padhihomelab/s6-alpine'><img src='https://img.shields.io/microbadger/layers/padhihomelab/s6-alpine/latest?logo=docker&logoWidth=24&style=for-the-badge'></img></a>
+<a href='https://hub.docker.com/r/padhihomelab/s6-overlay'><img src='https://img.shields.io/docker/image-size/padhihomelab/s6-overlay/latest?logo=docker&logoWidth=24&style=for-the-badge'></img></a> <a href='https://microbadger.com/images/padhihomelab/s6-overlay'><img src='https://img.shields.io/microbadger/layers/padhihomelab/s6-overlay/latest?logo=docker&logoWidth=24&style=for-the-badge'></img></a>
 
 A multiarch [s6-overlay] Docker image, based on [Alpine Linux].
 
